@@ -55,7 +55,8 @@ def registerUser(request):
             if user is not None:
                 login(request, user)
                 return redirect('gallery')
-
+        else:
+            print("here")
     context = {'form': form, 'page': page}
     return render(request, 'photos/login_register.html', context)
 
