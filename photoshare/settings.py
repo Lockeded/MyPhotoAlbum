@@ -22,13 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'm-un_db=x5c@_6f%%ngz=4_$x%jqohc71$*yg2=8_5%4p&hh#('
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["www.lockede.me","lockede.me","127.0.0.1"]
 
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
