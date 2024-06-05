@@ -9,3 +9,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# sudo nohup python3 manage.py runserver 0.0.0.0:80 &
