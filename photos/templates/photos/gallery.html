@@ -17,6 +17,7 @@
         .image-thumbnail {
             height: 200px;
             object-fit: cover;
+            border-radius: 15px;
         }
 
         /* Custom CSS for list-group item */
@@ -32,6 +33,7 @@
             padding-top: 20px;
             border: none; /* No border */
             font-family: 'YouYuan', sans-serif; /* Font style */
+            height: 100vh; /* Extend to full height */
         }
 
         /* Custom CSS for main content */
@@ -49,7 +51,7 @@
             border: none; /* No border */
             padding: 15px;
             margin-bottom: 20px;
-            border-radius: 5px;
+            border-radius: 15px;
             text-align: center; /* Center-align text */
             font-family: 'YouYuan', sans-serif; /* Font style */
             font-size: 1.25rem; /* Font size */
@@ -65,7 +67,7 @@
             color: #6c757d; /* Gray */
             border: none; /* No border */
             padding: 20px; /* Padding */
-            border-radius: 5px; /* Border radius */
+            border-radius: 15px; /* Border radius */
             margin-left: auto; /* Align to right */
             margin-right: 0; /* Align to right */
             margin-bottom: 20px; /* Margin bottom */
@@ -83,17 +85,20 @@
 
         .card {
             background-color: rgba(255, 255, 255, 0.8); /* White with transparency */
+            border-radius: 15px;
             border: none; /* No border */
         }
 
         .card-header {
             background-color: rgba(0, 0, 0, 0.8); /* Dark with transparency */
             color: white;
+            border-radius: 15px 15px 0 0; /* Rounded corners */
             border: none; /* No border */
         }
 
         .card-footer {
             background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent footer */
+            border-radius: 0 0 15px 15px; /* Rounded corners */
             border: none; /* No border */
         }
 
@@ -104,6 +109,20 @@
                 left: 50%;
                 transform: translateX(-50%);
             }
+        }
+
+        /* Custom CSS for image card */
+        .image-card {
+            background-color: rgba(255, 255, 255, 0.9); /* White with more transparency */
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Custom CSS for category text */
+        .category-text {
+            font-size: 1rem;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -152,16 +171,18 @@
                     {% if photos %}
                     {% for photo in photos %}
                     <div class="col-md-4">
-                        <div class="card my-2">
-                            <!-- Display photo thumbnail -->
-                            <img class="image-thumbnail" src="{{photo.image.url}}" alt="Photo">
+                        <div class="image-card">
+                            <div class="card my-2">
+                                <!-- Display photo thumbnail -->
+                                <img class="image-thumbnail" src="{{photo.image.url}}" alt="Photo">
 
-                            <div class="card-body">
-                                <!-- Display category name -->
-                                <small>类别： {{photo.category.name}}</small>
+                                <div class="card-body">
+                                    <!-- Display category name -->
+                                    <small class="category-text">类别： {{photo.category.name}}</small>
+                                </div>
+                                <!-- View photo button -->
+                                <a href="{% url 'photo' photo.id %}" class="btn btn-outline-dark btn-sm m-1">查看</a>
                             </div>
-                            <!-- View photo button -->
-                            <a href="{% url 'photo' photo.id %}" class="btn btn-outline-dark btn-sm m-1">查看</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -182,3 +203,6 @@
     <!-- Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"
         integrity="sha384-BSQA4xqFdhP5Jpnp0HuA+eIHGDuaeuD
+</body>
+
+</html>
