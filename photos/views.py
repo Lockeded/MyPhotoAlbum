@@ -3,14 +3,15 @@ from .models import Category, Photo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
+
 # Create your views here.
 @login_required(login_url='login')
 def delete_category_view(request, pk):
     category = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
         category.delete()
-        return redirect('gallery')  # 或者重定向到其他页面
-    return render(request, 'delete_category.html', {'category': category})
+        return redirect('gallery')
+    return render(request, 'photos/delete_category.html', {'category': category})
 
 @login_required(login_url='login')
 def edit_photo(request, pk):
@@ -29,7 +30,6 @@ def delete_photo(request, pk):
         return redirect('gallery')
     return render(request, 'photos/delete_photo.html', {'photo': photo})
 
-
 def loginUser(request):
     page = 'login'
     if request.method == 'POST':
@@ -44,11 +44,9 @@ def loginUser(request):
 
     return render(request, 'photos/login_register.html', {'page': page})
 
-
 def logoutUser(request):
     logout(request)
     return redirect('login')
-
 
 def registerUser(request):
     page = 'register'
@@ -68,7 +66,6 @@ def registerUser(request):
     context = {'form': form, 'page': page}
     return render(request, 'photos/login_register.html', context)
 
-
 @login_required(login_url='login')
 def gallery(request):
     user = request.user
@@ -83,12 +80,10 @@ def gallery(request):
     context = {'categories': categories, 'photos': photos}
     return render(request, 'photos/gallery.html', context)
 
-
 @login_required(login_url='login')
 def viewPhoto(request, pk):
     photo = Photo.objects.get(id=pk)
     return render(request, 'photos/photo.html', {'photo': photo})
-
 
 @login_required(login_url='login')
 def addPhoto(request):

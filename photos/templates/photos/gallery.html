@@ -24,38 +24,38 @@
         .list-group-item a {
             text-decoration: none;
             color: black;
-            font-family: 'YouYuan', sans-serif; /* Font style */
+            font-family: 'YouYuan', sans-serif;
         }
 
         /* Custom CSS for sidebar */
         #sidebar {
-            background-color: rgba(248, 249, 250, 0); /* Light gray with transparency */
+            background-color: rgba(248, 249, 250, 0);
             padding-top: 20px;
-            border: none; /* No border */
-            font-family: 'YouYuan', sans-serif; /* Font style */
-            height: 100vh; /* Extend to full height */
+            border: none;
+            font-family: 'YouYuan', sans-serif;
+            height: 100vh;
         }
 
         /* Custom CSS for main content */
         #main-content {
-            background-color: rgba(255, 255, 255, 0); /* White with transparency */
+            background-color: rgba(255, 255, 255, 0);
             padding-top: 20px;
-            border: none; /* No border */
-            font-family: 'YouYuan', sans-serif; /* Font style */
+            border: none;
+            font-family: 'YouYuan', sans-serif;
         }
 
         /* Custom CSS for login prompt */
         .login-prompt {
-            background-color: rgba(212, 237, 218, 1); /* Light green with transparency */
-            color: #155724; /* Dark green */
-            border: none; /* No border */
+            background-color: rgba(212, 237, 218, 1);
+            color: #155724;
+            border: none;
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 15px;
-            text-align: center; /* Center-align text */
-            font-family: 'YouYuan', sans-serif; /* Font style */
-            font-size: 1.25rem; /* Font size */
-            font-weight: bold; /* Font weight */
+            text-align: center;
+            font-family: 'YouYuan', sans-serif;
+            font-size: 1.25rem;
+            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -64,14 +64,14 @@
 
         /* Custom CSS for empty photo message */
         .empty-photo-message {
-            color: #6c757d; /* Gray */
-            border: none; /* No border */
-            padding: 20px; /* Padding */
-            border-radius: 15px; /* Border radius */
-            margin-left: auto; /* Align to right */
-            margin-right: 0; /* Align to right */
-            margin-bottom: 20px; /* Margin bottom */
-            font-family: 'YouYuan', sans-serif; /* Font style */
+            color: #6c757d;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            margin-left: auto;
+            margin-right: 0;
+            margin-bottom: 20px;
+            font-family: 'YouYuan', sans-serif;
         }
 
         /* Custom CSS for background image */
@@ -80,26 +80,26 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            font-family: 'YouYuan', sans-serif; /* Font style */
+            font-family: 'YouYuan', sans-serif;
         }
 
         .card {
-            background-color: rgba(255, 255, 255, 0.8); /* White with transparency */
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 15px;
-            border: none; /* No border */
+            border: none;
         }
 
         .card-header {
-            background-color: rgba(0, 0, 0, 0.8); /* Dark with transparency */
+            background-color: rgba(0, 0, 0, 0.8);
             color: white;
-            border-radius: 15px 15px 0 0; /* Rounded corners */
-            border: none; /* No border */
+            border-radius: 15px 15px 0 0;
+            border: none;
         }
 
         .card-footer {
-            background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent footer */
-            border-radius: 0 0 15px 15px; /* Rounded corners */
-            border: none; /* No border */
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 15px 15px;
+            border: none;
         }
 
         /* Custom CSS for adjusting login prompt position */
@@ -113,7 +113,7 @@
 
         /* Custom CSS for image card */
         .image-card {
-            background-color: rgba(255, 255, 255, 0.9); /* White with more transparency */
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             padding: 10px;
             margin-bottom: 20px;
@@ -149,10 +149,14 @@
                         </li>
                         <!-- Loop through categories -->
                         {% for category in categories %}
-                        <li class="list-group-item">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             <a href="{% url 'gallery' %}?category={{category.name}}">
                                 {{category.name}}
                             </a>
+                            <form action="{% url 'delete_category' category.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">删除</button>
+                            </form>
                         </li>
                         {% endfor %}
                     </ul>
