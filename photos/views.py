@@ -5,10 +5,18 @@ from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 
 # Create your views here.
-@login_required(login_url='login')
 def delete_category_view(request, pk):
+    user = request.user
     category = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
+        # 删除该类别下的所有照片
+        photos = Photo.objects.filter(
+            category__name=category, category__user=user)
+        print(photos)
+        for photo in photos:
+            photo.image.delete()  # 删除服务器上的图片文件
+            photo.delete()
+        # 删除类别
         category.delete()
         return redirect('gallery')
     return render(request, 'photos/delete_category.html', {'category': category})
@@ -26,6 +34,7 @@ def edit_photo(request, pk):
 def delete_photo(request, pk):
     photo = Photo.objects.get(id=pk)
     if request.method == 'POST':
+        photo.image.delete()
         photo.delete()
         return redirect('gallery')
     return render(request, 'photos/delete_photo.html', {'photo': photo})
