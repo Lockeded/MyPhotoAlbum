@@ -3,8 +3,83 @@ from .models import Category, Photo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
+import dashscope
+dashscope.api_key = "sk-5499188e2c7c4fd1bf392dae4686f367"
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Photo, Category
+import numpy as np
+import cv2
+from sklearn.metrics.pairwise import cosine_similarity
+from django.conf import settings
+import os
+
+@login_required(login_url='login')
+def find_similar_photos(request):
+    user = request.user
+    photos = Photo.objects.filter(category__user=user)
+    image_vectors = []
+    image_ids = []
+
+    for photo in photos:
+        image_path = os.path.join(settings.MEDIA_ROOT, photo.image.name)
+        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        resized_image = cv2.resize(image, (100, 100)).flatten()  # resize and flatten image
+        image_vectors.append(resized_image)
+        image_ids.append(photo.id)
+
+    similarities = cosine_similarity(image_vectors)
+    similar_photos = {}
+
+    for i in range(len(similarities)):
+        for j in range(i + 1, len(similarities)):
+            if similarities[i, j] > 0.9:  # If similarity is greater than 90%
+                if image_ids[i] not in similar_photos:
+                    similar_photos[image_ids[i]] = []
+                similar_photos[image_ids[i]].append(image_ids[j])
+
+    if similar_photos:
+        new_category = Category.objects.create(name="相似图片集合", user=user)
+        for photo_id, similar_ids in similar_photos.items():
+            photo = Photo.objects.get(id=photo_id)
+            photo.category = new_category
+            photo.save()
+            for similar_id in similar_ids:
+                similar_photo = Photo.objects.get(id=similar_id)
+                similar_photo.category = new_category
+                similar_photo.save()
+
+    return redirect('gallery')
+
 
 # Create your views here.
+@login_required(login_url='login')
+def AI_generate_description(request, pk):
+    photo = Photo.objects.get(id=pk)
+    image_url = "http://www.lockede.me" + photo.image.url
+    try:
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"image": image_url},
+                    {"text": "这是什么?"}
+                ]
+            }
+        ]
+        response = dashscope.MultiModalConversation.call(model=dashscope.MultiModalConversation.Models.qwen_vl_chat_v1,
+                                                        messages=messages)
+        new_description = response.output.choices[0].message.content
+        print(new_description)
+    except:
+        new_description = "生成描述失败了,真是不好意思"
+    if request.method == 'POST':
+        photo.description = new_description
+        photo.save()
+    return render(request, 'photos/photo.html', {'photo': photo})
+
+@login_required(login_url='login')
 def delete_category_view(request, pk):
     user = request.user
     category = get_object_or_404(Category, pk=pk)

@@ -49,10 +49,10 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            max-height: 72vh; /* Adjusted to match the middle of the image */
+            max-height: 72vh;
             overflow-y: auto;
             position: relative;
-            top: 0px; /* Lowered the position */
+            top: 0px;
         }
 
         .description-text, .edit-form textarea {
@@ -64,18 +64,18 @@
             padding: 10px;
             text-align: center;
             position: relative;
-            margin-bottom: 20px; /* Add margin to keep consistent with the edit button */
+            margin-bottom: 20px;
         }
 
         .edit-form {
             display: none;
             flex-grow: 1;
-            padding: 0px; /* Add padding to match the padding of the description text */
+            padding: 0px;
         }
 
         .edit-form button {
             width: 100%;
-            margin-top: 5px; /* Add margin to separate the button from the textarea */
+            margin-top: 5px;
         }
 
         .edit-button {
@@ -89,9 +89,9 @@
             gap: 30px;
             justify-content: center;
             margin-bottom: 10px;
-            background-color: rgba(255, 255, 255, 0.8); /* Added background color */
-            padding: 5px; /* Reduced padding */
-            border-radius: 5px; /* Reduced border radius */
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 5px;
         }
 
         .content-wrapper {
@@ -111,10 +111,14 @@
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger mt-3 me-2">删除照片</button>
                     </form>
+                    <form method="POST" action="{% url 'AI_generate_description' photo.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success mt-3 me-2">AI大模型生成描述</button>
+                    </form>
                 </div>
                 <div class="content-wrapper">
                     <div class="image-container">
-                        <img src="{{photo.image.url}}">
+                        <img src="{{ photo.image.url }}">
                     </div>
                     <div class="description-container">
                         <div class="description-text">
@@ -135,19 +139,14 @@
     </div>
 
     <script>
-        // Display the edit form and hide the description text when clicking the edit button
-        // Hide the edit button when clicking the edit button
         document.getElementById('edit-btn').addEventListener('click', function () {
             var descriptionText = document.querySelector('.description-text');
             var editForm = document.getElementById('edit-form');
             var textarea = editForm.querySelector('textarea');
-
-            // Set the height of the textarea to match the height of the description text
             textarea.style.height = descriptionText.clientHeight + 'px';
-
             descriptionText.style.display = 'none';
             editForm.style.display = 'block';
-            this.style.display = 'none'; // Hide the edit button
+            this.style.display = 'none';
         });
     </script>
 </body>

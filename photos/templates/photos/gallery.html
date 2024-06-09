@@ -160,9 +160,10 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    <!-- Add photo and logout buttons -->
+                    <!-- Add photo, find similar photos and logout buttons -->
                     <div class="card-footer">
                         <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">添加照片</a>
+                        <a href="{% url 'find_similar_photos' %}" class="btn btn-dark btn-block btn-sm m-1">找出相似图片</a>
                         <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">退出</a>
                     </div>
                 </div>
@@ -206,7 +207,7 @@
     <!-- Bootstrap JS and dependencies (optional) -->
     <!-- Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"
-        integrity="sha384-BSQA4xqFdhP5Jpnp0HuA+eIHGDuaeuD
+        integrity="sha384-BSQA4xqFdhP5Jpnp0HuA+eIHGDuaeuD"></script>
 </body>
 
 </html>
