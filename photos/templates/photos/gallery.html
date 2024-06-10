@@ -12,6 +12,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
+    <script>
+        function confirmDeleteGallery() {
+            if (confirm("您确定要删除该类别吗？")) {
+                // 如果用户点击了"确定"，则提交表单
+                document.getElementById("deleteFormGallery").submit();
+            } else {
+                // 如果用户点击了"取消"，则不做任何事情
+                return false;
+            }
+        }
+    </script>
+
     <style>
         /* Custom CSS for image thumbnail */
         .image-thumbnail {
@@ -153,9 +165,9 @@
                             <a href="{% url 'gallery' %}?category={{category.name}}">
                                 {{category.name}}
                             </a>
-                            <form action="{% url 'delete_category' category.id %}" method="POST" style="display:inline;">
+                            <form id="deleteFormGallery" action="{% url 'delete_category' category.id %}" method="POST" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm">删除</button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteGallery()">删除</button>
                             </form>
                         </li>
                         {% endfor %}

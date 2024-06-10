@@ -11,6 +11,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
+    <script>
+        function confirmDeletePhoto() {
+            if (confirm("您确定要删除这张照片吗？")) {
+                // 如果用户点击了"确定"，则提交表单
+                document.getElementById("deleteFormPhoto").submit();
+            } else {
+                // 如果用户点击了"取消"，则不做任何事情
+                return false;
+            }
+        }
+    </script>
+
     <style>
         body {
             background-image: url('{% static "images/Nature_3.jpg" %}');
@@ -25,7 +37,7 @@
             overflow: hidden;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
             flex: 3;
             display: flex;
             align-items: center;
@@ -49,10 +61,10 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            max-height: 72vh;
             overflow-y: auto;
             position: relative;
             top: 0px;
+            margin-bottom: 0;
         }
 
         .description-text, .edit-form textarea {
@@ -83,7 +95,7 @@
             bottom: 5px;
             right: 0px;
         }
-        
+
         .btn-container {
             display: flex;
             gap: 30px;
@@ -107,9 +119,9 @@
             <div class="col">
                 <div class="btn-container">
                     <a href="{% url 'gallery' %}" class="btn btn-dark my-3">返回</a>
-                    <form method="POST" action="{% url 'delete_photo' photo.id %}">
+                    <form id="deleteFormPhoto" method="POST" action="{% url 'delete_photo' photo.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger mt-3 me-2">删除照片</button>
+                        <button type="button" class="btn btn-danger mt-3 me-2" onclick="confirmDeletePhoto()">删除照片</button>
                     </form>
                     <form method="POST" action="{% url 'AI_generate_description' photo.id %}">
                         {% csrf_token %}
