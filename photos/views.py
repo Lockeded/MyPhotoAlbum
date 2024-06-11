@@ -21,7 +21,8 @@ def find_similar_photos(request):
     photos = Photo.objects.filter(category__user=user)
     image_vectors = []
     image_ids = []
-
+    if photos.count() < 2:
+        return redirect('gallery')
     for photo in photos:
         image_path = os.path.join(settings.MEDIA_ROOT, photo.image.name)
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -87,7 +88,6 @@ def delete_category_view(request, pk):
         # 删除该类别下的所有照片
         photos = Photo.objects.filter(
             category__name=category, category__user=user)
-        print(photos)
         for photo in photos:
             photo.image.delete()  # 删除服务器上的图片文件
             photo.delete()
