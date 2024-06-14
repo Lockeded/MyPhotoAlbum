@@ -22,10 +22,9 @@ class Photo(models.Model):
         verbose_name = 'Photo'
         verbose_name_plural = 'Photos'
     
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True)
-    image = models.ImageField(null=False, blank=False)
-    description = models.TextField()
-
+    image = models.ImageField(upload_to='photos/')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='photos')
+    save_to_original_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='original_photos', null=True, blank=True)
+    description = models.TextField(blank=True)
     def __str__(self):
         return self.description

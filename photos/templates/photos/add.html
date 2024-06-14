@@ -51,7 +51,7 @@
             <div class="col-md-4">
                 <a href="{% url 'gallery' %}" class="btn btn-dark my-3">返回</a>
                 <div class="card">
-                    <form method='POST' action="" enctype="multipart/form-data">
+                    <form id="addPhotoForm" method='POST' action="" enctype="multipart/form-data">
                         {% csrf_token %}
 
                         <div class="form-group m-3">
@@ -62,7 +62,7 @@
 
                         <div class="form-group m-3">
                             <label>选择一个类别~</label>
-                            <select name="category" class="form-control">
+                            <select id="categorySelect" name="category" class="form-control">
                                 <option value='none'>选择类别...</option>
 
                                 {% for category in categories %}
@@ -88,6 +88,19 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript to handle form submission validation -->
+    <script>
+        document.getElementById('addPhotoForm').onsubmit = function () {
+            var categorySelect = document.getElementById('categorySelect');
+            var selectedCategory = categorySelect.options[categorySelect.selectedIndex].value;
+            if (selectedCategory == 'none' && document.querySelector('[name="category_new"]').value.trim() == '') {
+                alert('请选择一个现有类别或新建一个类别！');
+                return false; // Prevent form submission
+            }
+        };
+    </script>
+
 </body>
 
 </html>

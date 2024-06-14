@@ -13,10 +13,10 @@
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
     <script>
-        function confirmDeleteGallery() {
+        function confirmDeleteGallery(formId) {
             if (confirm("您确定要删除该类别吗？")) {
                 // 如果用户点击了"确定"，则提交表单
-                document.getElementById("deleteFormGallery").submit();
+                document.getElementById(formId).submit();
             } else {
                 // 如果用户点击了"取消"，则不做任何事情
                 return false;
@@ -165,9 +165,9 @@
                             <a href="{% url 'gallery' %}?category={{category.name}}">
                                 {{category.name}}
                             </a>
-                            <form id="deleteFormGallery" action="{% url 'delete_category' category.id %}" method="POST" style="display:inline;">
+                            <form id="deleteFormGallery{{ category.id }}" action="{% url 'delete_category' category.id %}" method="POST" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteGallery()">删除</button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteGallery('deleteFormGallery{{ category.id }}')">删除</button>
                             </form>
                         </li>
                         {% endfor %}
@@ -199,6 +199,12 @@
                                 </div>
                                 <!-- View photo button -->
                                 <a href="{% url 'photo' photo.id %}" class="btn btn-outline-dark btn-sm m-1">查看</a>
+                                {% if photo.category.name == '相似图片集合' %}
+                                <form action="{% url 'save_similar_photo' photo.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm m-1">保存到原类别</button>
+                                </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

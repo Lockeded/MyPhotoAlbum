@@ -14,15 +14,26 @@ import cv2
 from sklearn.metrics.pairwise import cosine_similarity
 from django.conf import settings
 import os
+from django.db import transaction
 
-@login_required(login_url='login')
 def find_similar_photos(request):
     user = request.user
-    photos = Photo.objects.filter(category__user=user)
+    similar_category = Category.objects.filter(name="相似图片集合", user=user).first()
+    
+    # 排除已经属于“相似图片集合”类别的图片
+    if similar_category:
+        photos = Photo.objects.filter(category__user=user).exclude(category=similar_category)
+    else:
+        photos = Photo.objects.filter(category__user=user)
+
     image_vectors = []
     image_ids = []
     if photos.count() < 2:
         return redirect('gallery')
+
+    # 用于存储相似图片的字典
+    similar_photos = {}
+
     for photo in photos:
         image_path = os.path.join(settings.MEDIA_ROOT, photo.image.name)
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -31,26 +42,45 @@ def find_similar_photos(request):
         image_ids.append(photo.id)
 
     similarities = cosine_similarity(image_vectors)
-    similar_photos = {}
 
     for i in range(len(similarities)):
         for j in range(i + 1, len(similarities)):
             if similarities[i, j] > 0.9:  # If similarity is greater than 90%
                 if image_ids[i] not in similar_photos:
                     similar_photos[image_ids[i]] = []
-                similar_photos[image_ids[i]].append(image_ids[j])
+
+                # 将相似图片的原始类别记录下来
+                original_category_i = photos.get(id=image_ids[i]).category
+                original_category_j = photos.get(id=image_ids[j]).category
+
+                similar_photos[image_ids[i]].append((image_ids[j], original_category_j))
+    
+    if not similar_category:
+        similar_category = Category.objects.create(name="相似图片集合", user=user)
 
     if similar_photos:
-        new_category = Category.objects.create(name="相似图片集合", user=user)
-        for photo_id, similar_ids in similar_photos.items():
-            photo = Photo.objects.get(id=photo_id)
-            photo.category = new_category
-            photo.save()
-            for similar_id in similar_ids:
-                similar_photo = Photo.objects.get(id=similar_id)
-                similar_photo.category = new_category
-                similar_photo.save()
+        with transaction.atomic():
+            for photo_id, similar_info in similar_photos.items():
+                photo = Photo.objects.get(id=photo_id)
+                photo.save_to_original_category = photo.category  # 保存原始类别
+                photo.category = similar_category
+                photo.save()
 
+                for similar_id, original_category in similar_info:
+                    similar_photo = Photo.objects.get(id=similar_id)
+                    similar_photo.save_to_original_category = similar_photo.category  # 保存原始类别
+                    similar_photo.category = similar_category
+                    similar_photo.save()
+
+    return redirect('gallery')
+
+@login_required
+def save_similar_photo(request, photo_id):
+    photo = get_object_or_404(Photo, id=photo_id)
+    if photo.save_to_original_category:
+        photo.category = photo.save_to_original_category
+        photo.save_to_original_category = None
+        photo.save()
     return redirect('gallery')
 
 
