@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>登录/注册</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <style>
+        body {
+            background-image: url('{% static "images/Nature_3.jpg" %}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'YouYuan', sans-serif;
+        }
+
+        .login--wrapper {
+            display: flex;
+            align-items: center;
+            height: 80vh;
+            justify-content: center;
+        }
+
+        .form {
+            width: 500px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'YouYuan', sans-serif;
+        }
+
+        .form h1,
+        .form h4 {
+            text-align: center;
+        }
+
+        .form .mb-3 {
+            margin-bottom: 20px;
+        }
+
+        .form .form-label {
+            margin-bottom: 10px;
+        }
+
+        .form .btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .form p {
+            text-align: center;
+        }
+
+        .form a {
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+        // 从Django模板中安全地获取消息，并确保它们是JSON格式
+        const messages = {{ messages|safe }};
+        
+        // 检查messages是否是一个数组且不为空
+        if (messages && messages.length > 0) {
+            messages.forEach(function(message) {
+                // 显示每条消息
+                alert(message);
+            });
+        }
+    };
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="login--wrapper">
+            {% if page == 'login' %}
+            <form method='post' class="form">
+                {% csrf_token %}
+                <h1>登录</h1>
+                <h4>管理你的照片~</h4>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">用户名</label>
+                    <input type="text" class="form-control" name="username" id="exampleInputEmail1"
+                        aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">密码</label>
+                    <input type="password" class="form-control" name="password" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">确认</button>
+                <p>没有账号? <a href="{% url 'register' %}">注册</a></p>
+            </form>
+            {% else %}
+            <form method='post' class="form">
+                <h1>注册</h1>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">{{field.label}}</label>
+                    {{field}}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">提交</button>
+                <p>已有账号? <a href="{% url 'login' %}">登录</a></p>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

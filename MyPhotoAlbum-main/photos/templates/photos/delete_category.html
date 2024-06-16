@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>删除类别</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                删除类别
+            </div>
+            <div class="card-body">
+                <p>你确定要删除类别 "{{ category.name }}" 吗？这将删除该类别下的所有照片。</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">删除</button>
+                    <a href="{% url 'gallery' %}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <!-- Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"
+        integrity="sha384-BSQA4xqFdhP5Jpnp0HuA+eIHGDuaeuD"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pzjw8f+ua7Kw1TIqP3eZj5rv9K9W8a4tmG6A7hfXSKH8AbG8cGii0ybh4UUFp7ni"></script>
+</body>
+
+</html>
