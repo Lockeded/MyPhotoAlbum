@@ -11,17 +11,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-    <script>
-        function confirmDeletePhoto() {
-            if (confirm("您确定要删除这张照片吗？")) {
-                // 如果用户点击了"确定"，则提交表单
-                document.getElementById("deleteFormPhoto").submit();
-            } else {
-                // 如果用户点击了"取消"，则不做任何事情
-                return false;
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function confirmDeletePhoto() {
+                Swal.fire({
+                    title: '你确定要删除这张照片吗？',
+                    text: "删了就真没了",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 如果用户点击了"确定"，则提交表单
+                        document.getElementById("deleteFormPhoto").submit();
+                    }
+                })
             }
-        }
-    </script>
+        </script>
 
     <style>
         body {

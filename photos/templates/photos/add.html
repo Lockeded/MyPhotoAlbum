@@ -90,12 +90,17 @@
     </div>
 
     <!-- JavaScript to handle form submission validation -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.getElementById('addPhotoForm').onsubmit = function () {
             var categorySelect = document.getElementById('categorySelect');
             var selectedCategory = categorySelect.options[categorySelect.selectedIndex].value;
             if (selectedCategory == 'none' && document.querySelector('[name="category_new"]').value.trim() == '') {
-                alert('请选择一个现有类别或新建一个类别！');
+                Swal.fire({
+                    icon: 'error',
+                    title: '错误',
+                    text: '请选择一个现有类别或新建一个类别！',
+                });
                 return false; // Prevent form submission
             }
         };

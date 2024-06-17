@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category, Photo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm
 import dashscope
 dashscope.api_key = "sk-5499188e2c7c4fd1bf392dae4686f367"
@@ -155,6 +157,8 @@ def loginUser(request):
         if user is not None:
             login(request, user)
             return redirect('gallery')
+        else:
+            messages.error(request, '用户名或密码错误')
 
     return render(request, 'photos/login_register.html', {'page': page})
 
@@ -165,7 +169,15 @@ def logoutUser(request):
 def registerUser(request):
     page = 'register'
     form = CustomUserCreationForm()
-
+    error_translation = {
+        'This field is required.': '此字段必须要填~',
+        'Enter a valid email address.': '请输入有效的电子邮件地址。',
+        'A user with that username already exists.': '这个用户名已经有人用了~',
+        'The two password fields didn’t match.': '两次输入的密码不一样啊~',
+        'This password is too short. It must contain at least 8 characters.': '密码弄复杂点~',
+        'This password is too common.': '密码太常见了~',
+        'This password is entirely numeric.': '密码不能全为数字~',
+    }
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -175,8 +187,13 @@ def registerUser(request):
             if user is not None:
                 login(request, user)
                 return redirect('gallery')
-        else:
-            print("here")
+        elif form.errors:
+            
+            for field in form:
+                for error in field.errors:
+                    translated_error = error_translation.get(error)
+                    messages.error(request, f"{translated_error}")
+                    return redirect('register')
     context = {'form': form, 'page': page}
     return render(request, 'photos/login_register.html', context)
 
