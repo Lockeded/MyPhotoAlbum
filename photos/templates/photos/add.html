@@ -108,6 +108,16 @@
                 return false; // Prevent form submission
             }
 
+            // Check if the new category is not "相似照片集合"
+            if (newCategory === '相似照片集合') {
+                Swal.fire({
+                    icon: 'error',
+                    title: '错误',
+                    text: '新类别不能命名为"相似照片集合"！',
+                });
+                return false; // Prevent form submission
+            }
+
             // Check if the uploaded files are images
             for (var i = 0; i < images.length; i++) {
                 var file = images[i];
