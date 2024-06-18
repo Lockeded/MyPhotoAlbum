@@ -95,13 +95,30 @@
         document.getElementById('addPhotoForm').onsubmit = function () {
             var categorySelect = document.getElementById('categorySelect');
             var selectedCategory = categorySelect.options[categorySelect.selectedIndex].value;
-            if (selectedCategory == 'none' && document.querySelector('[name="category_new"]').value.trim() == '') {
+            var newCategory = document.querySelector('[name="category_new"]').value.trim();
+            var images = document.querySelector('[name="images"]').files;
+            
+            // Check if a category is selected or a new category is provided
+            if (selectedCategory == 'none' && newCategory == '') {
                 Swal.fire({
                     icon: 'error',
                     title: '错误',
                     text: '请选择一个现有类别或新建一个类别！',
                 });
                 return false; // Prevent form submission
+            }
+
+            // Check if the uploaded files are images
+            for (var i = 0; i < images.length; i++) {
+                var file = images[i];
+                if (!file.type.startsWith('image/')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '错误',
+                        text: '上传的文件必须是图片格式！',
+                    });
+                    return false; // Prevent form submission
+                }
             }
         };
     </script>

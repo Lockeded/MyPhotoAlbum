@@ -18,6 +18,7 @@ from django.conf import settings
 import os
 from django.db import transaction
 
+@login_required(login_url='login')
 def find_similar_photos(request):
     user = request.user
     similar_category = Category.objects.filter(name="相似图片集合", user=user).first()
@@ -76,7 +77,7 @@ def find_similar_photos(request):
 
     return redirect('gallery')
 
-@login_required
+@login_required(login_url='login')
 def save_similar_photo(request, photo_id):
     photo = get_object_or_404(Photo, id=photo_id)
     if photo.save_to_original_category:
