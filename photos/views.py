@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm
 import dashscope
-dashscope.api_key = "sk-5499188e2c7c4fd1bf392dae4686f367"
+dashscope.api_key = "****"
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
