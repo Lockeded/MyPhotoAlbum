@@ -163,6 +163,76 @@
             font-size: 1rem;
             font-weight: bold;
         }
+
+        /* Custom CSS for site comments section */
+        .site-comments {
+            margin-top: 20px;
+        }
+
+        .site-comments h2, .site-comments h3 {
+            font-family: 'YouYuan', sans-serif;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .site-comments p {
+            font-family: 'YouYuan', sans-serif;
+            font-size: 1rem;
+        }
+
+        .site-comments form {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .site-comments textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            resize: none;
+        }
+
+        .site-comments button {
+            border-radius: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            margin-left: 10px;
+        }
+
+        .site-comments button:hover {
+            cursor: pointer;
+        }
+
+        .comment-input {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .comment-input textarea {
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+
+        .comment-input button {
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-left: 10px;
+        }
+
+        .comment-input button:hover {
+            color: #0056b3;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -204,6 +274,26 @@
                         <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">添加照片</a>
                         <a href="{% url 'find_similar_photos' %}" class="btn btn-dark btn-block btn-sm m-1">找出相似图片</a>
                         <button type="button" class="btn btn-dark btn-block btn-sm m-1" onclick="confirmLogout('{% url 'logout' %}')">退出</button>
+                    </div>
+                </div>
+                <!-- Site Comments Section -->
+                <div class="card site-comments">
+                    <div class="card-header bg-dark text-white">
+                        评论
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            {% for comment in site_comments %}
+                            <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <form action="{% url 'add_site_comment' %}" method="post" class="comment-input">
+                            {% csrf_token %}
+                            <textarea name="content" rows="1"></textarea>
+                            <button type="submit">&#x21B5;</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -250,7 +340,6 @@
     </div>
 
     <!-- Bootstrap JS and dependencies (optional) -->
-    <!-- Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"
         integrity="sha384-BSQA4xqFdhP5Jpnp0HuA+eIHGDuaeuD"></script>
 </body>

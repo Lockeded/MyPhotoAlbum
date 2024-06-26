@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm
 import dashscope
-dashscope.api_key = "sk-5499188e2c7c4fd1bf392dae4686f367"
+dashscope.api_key = "****"
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -17,6 +17,17 @@ from sklearn.metrics.pairwise import cosine_similarity
 from django.conf import settings
 import os
 from django.db import transaction
+from .models import SiteComment
+from django.utils import timezone
+
+def add_site_comment(request):
+    if request.method == 'POST':
+        content = request.POST.get('content', '')
+        if content:
+            comment = SiteComment.objects.create(user=request.user, content=content)
+            comment.save()
+            return redirect('gallery')
+    return redirect('gallery')
 
 @login_required(login_url='login')
 def find_similar_photos(request):
@@ -209,7 +220,8 @@ def gallery(request):
             category__name=category, category__user=user)
 
     categories = Category.objects.filter(user=user)
-    context = {'categories': categories, 'photos': photos}
+    site_comments = SiteComment.objects.all()
+    context = {'categories': categories, 'photos': photos, 'site_comments': site_comments}
     return render(request, 'photos/gallery.html', context)
 
 @login_required(login_url='login')
